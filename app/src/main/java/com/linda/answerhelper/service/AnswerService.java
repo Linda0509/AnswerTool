@@ -69,7 +69,11 @@ public class AnswerService extends Service {
                     Bundle bundle = msg.getData();
                     String result = bundle.getString(KEY_RESULT);
                     if (!TextUtils.isEmpty(result) && webViewWeakReference.get() != null) {
-                        webViewWeakReference.get().loadUrl("http://www.baidu.com/s?wd=" + result);
+                        if (result.contains(".")){
+                            int index = result.indexOf(".");
+                            result = result.substring(index+1);
+                        }
+                        webViewWeakReference.get().loadUrl("https://wap.sogou.com/web/searchList.jsp?keyword=" + result);
                     }
                     break;
             }
