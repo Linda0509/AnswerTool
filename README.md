@@ -1,5 +1,5 @@
 # AnswerTool
-答题游戏悬浮框辅助
+百万英雄 悬浮框辅助
 
 ![image](https://github.com/ChinaLinda/AnswerTool/blob/master/sample.jpg)
 
