@@ -15,11 +15,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.RadioGroup;
 
 import com.linda.answerhelper.service.AnswerService;
 import com.linda.answerhelper.event.BitmapEvent;
 import com.linda.answerhelper.event.StartCaptureEvent;
 import com.linda.answerhelper.util.Util;
+import com.linda.tool.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,10 +40,34 @@ public class MainActivity extends AppCompatActivity {
     private MediaProjectionManager mProjectionManager;
     private MediaProjection mMediaProjection;
     private ImageReader mImageReader;
+    private RadioGroup mGroup;
+    private int[] mSize; //y height
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mSize = new int[]{Util.dp2px(this, 100),Util.dp2px(this, 100)};
+        mGroup = findViewById(R.id.group);
+
+        mGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                Log.i("ldh",""+radioGroup.getCheckedRadioButtonId());
+                switch (radioGroup.getCheckedRadioButtonId()){
+                    case R.id.chong_ding:
+                        mSize = new int[]{Util.dp2px(MainActivity.this, 190),Util.dp2px(MainActivity.this, 100)};
+                        break;
+                    case R.id.baiwan:
+                        mSize = new int[]{Util.dp2px(MainActivity.this, 100),Util.dp2px(MainActivity.this, 100)};
+                        break;
+                    case R.id.zhishi:
+                        mSize = new int[]{Util.dp2px(MainActivity.this, 100),Util.dp2px(MainActivity.this, 100)};
+                        break;
+                }
+            }
+        });
+
         EventBus.getDefault().register(this);
         initPermission();
     }
@@ -128,8 +155,7 @@ public class MainActivity extends AppCompatActivity {
         int rowPadding = rowStride - pixelStride * width;
         Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
         bitmap.copyPixelsFromBuffer(buffer);
-        //Tode 目前写死了问题区域
-        bitmap = Bitmap.createBitmap(bitmap, 0, Util.dp2px(this, 100), width, Util.dp2px(this, 100));
+        bitmap = Bitmap.createBitmap(bitmap, 0, mSize[0], width, mSize[1]);
         image.close();
 
         BitmapEvent bitmapEvent = new BitmapEvent();
