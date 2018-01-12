@@ -1,0 +1,19 @@
+#Fri Jan 12 11:11:35 CST 2018
+renamed.5=classes6.dex
+renamed.4=classes5.dex
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.5=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\13
+base.4=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\12
+base.3=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\11
+base.2=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\16
+base.1=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\15
+base.0=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\14
+file.5=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\13\\classes.dex
+file.4=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\12\\classes.dex
+file.3=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\11\\classes.dex
+file.2=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\16\\classes.dex
+file.1=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\15\\classes.dex
+file.0=D\:\\Tool(1)\\Tool\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\14\\classes.dex

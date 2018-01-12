@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="D:\Tool(1)\Tool\app\src\main\assets"><file name="chi_sim.traineddata" path="D:\Tool(1)\Tool\app\src\main\assets\chi_sim.traineddata"/></source><source path="D:\Tool(1)\Tool\app\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="D:\Tool(1)\Tool\app\src\debug\assets"/></dataSet></merger>
