@@ -13,12 +13,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -45,7 +47,7 @@ public class AnswerService extends Service {
 
     private TessBaseAPI mBaseAPI;
 
-    private View mWebViewContainer;
+    private FrameLayout mWebViewContainer;
     private WindowManager.LayoutParams mWebViewContainerParams;
 
     private Handler mHandler;
@@ -55,10 +57,10 @@ public class AnswerService extends Service {
 
     public static class WebViewHandler extends Handler {
 
-        WeakReference<WebView> webViewWeakReference;
+        WeakReference<FrameLayout> webViewWeakReference;
 
-        WebViewHandler(WebView webView) {
-            webViewWeakReference = new WeakReference<WebView>(webView);
+        WebViewHandler(FrameLayout webViewContainer) {
+            webViewWeakReference = new WeakReference<FrameLayout>(webViewContainer);
         }
 
         @Override
@@ -69,11 +71,12 @@ public class AnswerService extends Service {
                     Bundle bundle = msg.getData();
                     String result = bundle.getString(KEY_RESULT);
                     if (!TextUtils.isEmpty(result) && webViewWeakReference.get() != null) {
-                        if (result.contains(".")){
+                        if (result.contains(".")) {
                             int index = result.indexOf(".");
-                            result = result.substring(index+1);
+                            result = result.substring(index + 1);
                         }
-                        webViewWeakReference.get().loadUrl("https://wap.sogou.com/web/searchList.jsp?keyword=" + result);
+                        ((WebView)webViewWeakReference.get().findViewById(R.id.over_layer_webview)).loadUrl("https://wap.sogou.com/web/searchList.jsp?keyword=" + result);
+                        webViewWeakReference.get().findViewById(R.id.over_layer_progress).setVisibility(View.GONE);
                     }
                     break;
             }
@@ -97,7 +100,7 @@ public class AnswerService extends Service {
         mBaseAPI.init(ABSOLUTE_PATH + File.separator, "chi_sim");
 
         initWebViewContainerParams();
-        initToucher();
+        initTouchBtn();
     }
 
     private void initWebViewContainerParams() {
@@ -114,16 +117,16 @@ public class AnswerService extends Service {
         mWebViewContainerParams.x = 0;
         mWebViewContainerParams.y = 0;
         mWebViewContainerParams.width = Util.getScreenSize(this)[0];
-        mWebViewContainerParams.height = 400;
+        mWebViewContainerParams.height = dp2px(300);
 
         LayoutInflater inflater = LayoutInflater.from(getApplication());
         //获取浮动窗口视图所在布局.
-        mWebViewContainer = inflater.inflate(R.layout.toucher_layout, null);
-
+        mWebViewContainer = (FrameLayout) inflater.inflate(R.layout.overlayer_layout, null);
         ImageButton mBtnRecognition = mWebViewContainer.findViewById(R.id.over_layer_button);
         mBtnRecognition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mWebViewContainer.findViewById(R.id.over_layer_progress).setVisibility(View.VISIBLE);
                 EventBus.getDefault().post(new StartCaptureEvent());
             }
         });
@@ -137,10 +140,10 @@ public class AnswerService extends Service {
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.setWebChromeClient(new WebChromeClient());
 
-        mHandler = new WebViewHandler(mWebView);
+        mHandler = new WebViewHandler(mWebViewContainer);
     }
 
-    private void initToucher() {
+    private void initTouchBtn() {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         mWindowManager = (WindowManager) getApplication().getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,22 +156,27 @@ public class AnswerService extends Service {
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.START | Gravity.BOTTOM;
         params.x = 0;
-        params.y = 400;
+        params.y = dp2px(300);
         params.width = 100;
         params.height = 100;
 
-        View toucherLayout = new ImageButton(this);
-        toucherLayout.setOnClickListener(new View.OnClickListener() {
+        LayoutInflater inflater = LayoutInflater.from(getApplication());
+        //获取浮动窗口视图所在布局.
+        View touchLayout = inflater.inflate(R.layout.toucher_btn_layout, null);
+        final ImageButton imageButton = touchLayout.findViewById(R.id.touch_btn);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isShowWebView) {
+                    imageButton.setBackgroundResource(R.drawable.rightsquare);
                     dismiss();
                 } else {
+                    imageButton.setBackgroundResource(R.drawable.leftsquare);
                     show();
                 }
             }
         });
-        mWindowManager.addView(toucherLayout, params);
+        mWindowManager.addView(touchLayout, params);
 
     }
 
@@ -212,6 +220,10 @@ public class AnswerService extends Service {
                 }
             }
         }.start();
+    }
+
+    private int dp2px(int dp){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getApplication().getResources().getDisplayMetrics());
     }
 
 }
