@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private MediaProjectionManager mProjectionManager;
     private MediaProjection mMediaProjection;
     private ImageReader mImageReader;
-    private RadioGroup mGroup;
     private int[] mSize; //y height
 
     @Override
@@ -48,25 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSize = new int[]{Util.dp2px(this, 100),Util.dp2px(this, 100)};
-        mGroup = findViewById(R.id.group);
-
-        mGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                Log.i("ldh",""+radioGroup.getCheckedRadioButtonId());
-                switch (radioGroup.getCheckedRadioButtonId()){
-                    case R.id.chong_ding:
-                        mSize = new int[]{Util.dp2px(MainActivity.this, 190),Util.dp2px(MainActivity.this, 100)};
-                        break;
-                    case R.id.baiwan:
-                        mSize = new int[]{Util.dp2px(MainActivity.this, 100),Util.dp2px(MainActivity.this, 100)};
-                        break;
-                    case R.id.zhishi:
-                        mSize = new int[]{Util.dp2px(MainActivity.this, 100),Util.dp2px(MainActivity.this, 100)};
-                        break;
-                }
-            }
-        });
 
         EventBus.getDefault().register(this);
         initPermission();
@@ -169,5 +149,11 @@ public class MainActivity extends AppCompatActivity {
         startCapture();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        home.addCategory(Intent.CATEGORY_HOME);
+        startActivity(home);
+    }
 }
